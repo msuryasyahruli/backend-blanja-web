@@ -4,7 +4,7 @@ const app = express();
 const morgan = require("morgan");
 const cors = require("cors");
 const helmet = require("helmet");
-const createError = require("http-errors");
+const createError = require('http-errors');
 const xss = require("xss-clean");
 const mainRouter = require("./src/routes/index");
 const port = 2525;
@@ -19,7 +19,7 @@ app.use('/img', express.static('./src/upload'))
 app.all("*", (req, res, next) => {
   next(new createError.NotFound());
 });
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   const messageError = err.message || "internal server error";
   const statusCode = err.status || 500;
   res.status(statusCode).json({

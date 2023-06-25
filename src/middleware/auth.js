@@ -25,4 +25,12 @@ const protect = (req, res, next) => {
   }
 };
 
-module.exports = { protect };
+const validationRole = (req, res, next) => {
+  if (req.payload.role === "seller") {
+    next();
+  } else {
+    res.json({ message: "Role Not seller" });
+  }
+};
+
+module.exports = { protect, validationRole };

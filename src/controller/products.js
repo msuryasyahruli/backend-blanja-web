@@ -62,7 +62,7 @@ const productController = {
   },
   createProduct: async (req, res) => {
     const PORT = process.env.PORT || 2525;
-    const DB_HOST = process.env.DB_HOST || "localhost";
+    const DB_HOST = process.env.PGHOST || "localhost";
     const photo = req.file.filename;
     const { name, price, stock, description, id_category } = req.body;
     const {
@@ -87,7 +87,7 @@ const productController = {
   updateProduct: async (req, res) => {
     try {
       const PORT = process.env.PORT || 2525;
-      const DB_HOST = process.env.DB_HOST || "localhost";
+      const DB_HOST = process.env.PGHOST || "localhost";
       const id = Number(req.params.id);
       const photo = req.file.filename;
       const { name, price, stock, description, id_category } = req.body;
