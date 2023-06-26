@@ -63,22 +63,22 @@ const usersController = {
     const {
       rows: [user],
     } = await findEmail(email);
-    delete user.password
+    delete user.password;
     commonHelper.response(res, user, 201);
   },
   refreshToken: (req, res) => {
-    const RefreshToken = req.body.refreshToken
+    const RefreshToken = req.body.refreshToken;
     const decoded = jwt.verify(RefreshToken, process.env.SECRETE_KEY_JWT);
     const payload = {
       email: decoded.email,
       role: decoded.role,
     };
-    const result ={
-      token : authHelper.generateToken(payload),
-      refreshToken : authHelper.refreshToken(payload)
-    }
+    const result = {
+      token: authHelper.generateToken(payload),
+      refreshToken: authHelper.refreshToken(payload),
+    };
     commonHelper.response(res, result, 200, "Token has refreshed");
-  }
+  },
 };
 
 module.exports = usersController;

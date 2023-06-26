@@ -17,7 +17,7 @@ const upload = multer({
     fileSize: 1024 * 1024 * 2,
   },
   fileFilter: function (req, file, cb) {
-    const validFile = [ "jpeg", "jpg", "png"];
+    const validFile = ["jpeg", "jpg", "png"];
     const extention = file.mimetype.split("/")[1];
     if (validFile.includes(extention)) {
       return cb(null, true);
