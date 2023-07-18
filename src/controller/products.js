@@ -9,13 +9,14 @@ const {
   searching,
 } = require("../model/products");
 const commonHelper = require("../helper/common");
-const client = require("../config/redis");
+// const client = require("../config/redis");
+const cloudinary = require("../middleware/cloudinary");
 
 const productController = {
   getAllProduct: async (req, res) => {
     try {
       const page = Number(req.query.page) || 1;
-      const limit = Number(req.query.limit) || 5;
+      const limit = Number(req.query.limit) || 10;
       const offset = (page - 1) * limit;
       const sortby = req.query.sortby || "id";
       const sort = req.query.sort || "ASC";
@@ -50,7 +51,7 @@ const productController = {
     }
     selectProduct(id)
       .then((result) => {
-        client.setEx(`products/${id}`, 60 * 60, JSON.stringify(result.rows));
+        // client.setEx(`products/${id}`, 60 * 60, JSON.stringify(result.rows));
         commonHelper.response(
           res,
           result.rows,
@@ -63,7 +64,8 @@ const productController = {
   createProduct: async (req, res) => {
     const PORT = process.env.PORT || 2525;
     const DB_HOST = process.env.PGHOST || "localhost";
-    const photo = req.file.filename;
+    const result = await cloudinary.uploader.upload(req.file.path);
+    const photo = result.secure_url;
     const { name, price, stock, description, id_category } = req.body;
     const {
       rows: [count],
@@ -74,7 +76,7 @@ const productController = {
       name,
       price,
       stock,
-      photo: `http://${DB_HOST}:${PORT}/img/${photo}`,
+      photo,
       description,
       id_category,
     };
@@ -89,7 +91,8 @@ const productController = {
       const PORT = process.env.PORT || 2525;
       const DB_HOST = process.env.PGHOST || "localhost";
       const id = Number(req.params.id);
-      const photo = req.file.filename;
+      const result = await cloudinary.uploader.upload(req.file.path);
+      const photo = result.secure_url;
       const { name, price, stock, description, id_category } = req.body;
       const { rowCount } = await findId(id);
       if (!rowCount) {
@@ -100,7 +103,7 @@ const productController = {
         name,
         price,
         stock,
-        photo: `http://${DB_HOST}:${PORT}/img/${photo}`,
+        photo,
         description,
         id_category,
       };

@@ -1,42 +1,42 @@
 const express = require("express");
 const router = express.Router();
 const productController = require("../controller/products");
-const { protect, validationRole } = require("../middleware/auth");
+// const {  validationRole, protect } = require("../middleware/auth");
 const upload = require("../middleware/upload");
-const {
-  hitCacheProductDetail,
-  clearCacheProductDetail,
-} = require("../middleware/redis");
+// const {
+//   hitCacheProductDetail,
+//   clearCacheProductDetail,
+// } = require("../middleware/redis");
 
 router
-  .get("/", protect, productController.getAllProduct)
-  .get("/search", protect, productController.searching)
+  .get("/",  productController.getAllProduct)
+  .get("/search",  productController.searching)
   .get(
     "/:id",
-    protect,
-    hitCacheProductDetail,
+    
+    // hitCacheProductDetail,
     productController.getDetailProduct
   )
   .post(
     "/",
-    protect,
-    validationRole,
-    upload.single("photo"),
+    // protect,
+    // validationRole,
+    upload,
     productController.createProduct
   )
   .put(
     "/:id",
-    protect,
-    validationRole,
-    upload.single("photo"),
-    clearCacheProductDetail,
+    // protect,
+    // validationRole,
+    upload,
+    // clearCacheProductDetail,
     productController.updateProduct
   )
   .delete(
     "/:id",
-    protect,
-    validationRole,
-    clearCacheProductDetail,
+    // protect,
+    // validationRole,
+    // clearCacheProductDetail,
     productController.deleteProduct
   );
 

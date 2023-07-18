@@ -2,12 +2,12 @@ const Pool = require("../config/db");
 
 const selectAllProduct = (limit, offset, sortby, sort) => {
   return Pool.query(
-    `SELECT products.id, products.name, products.price, products.photo, products.description, category.name AS category FROM products join category ON products.id_category = category.id ORDER BY ${sortby} ${sort} LIMIT ${limit} OFFSET ${offset}`
+    `SELECT products.id, products.name, products.price, products.stock, products.photo, products.description, category.name AS category FROM products join category ON products.id_category = category.id ORDER BY ${sortby} ${sort} LIMIT ${limit} OFFSET ${offset}`
   );
 };
 
 const selectProduct = (id) => {
-  return Pool.query(`SELECT products.id, products.name, products.price, products.photo, products.description, category.name AS category FROM products join category ON products.id_category = category.id WHERE products.id=${id}`);
+  return Pool.query(`SELECT products.id, products.name, products.price, products.stock, products.photo, products.description, category.name AS category FROM products join category ON products.id_category = category.id WHERE products.id=${id}`);
 };
 
 const insertProduct = (data) => {
@@ -46,7 +46,7 @@ const findId = (id) => {
 
 const searching = (name) => {
   return Pool.query(
-    `SELECT products.id, products.name, products.price, products.photo, products.description, category.name AS category FROM products join category ON products.id_category = category.id WHERE products.name ILIKE '%${name}%'`
+    `SELECT products.id, products.name, products.price, products.stock, products.photo, products.description, category.name AS category FROM products join category ON products.id_category = category.id WHERE products.name ILIKE '%${name}%'`
   );
 };
 
