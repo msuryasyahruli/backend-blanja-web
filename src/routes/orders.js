@@ -4,10 +4,8 @@ const ordersController = require("../controller/orders");
 
 router
   .get("/", ordersController.getAllOrders)
-  .get("/search", ordersController.searching)
   .get("/:id", ordersController.getDetailOrders)
   .post("/", ordersController.createOrders)
-  .put("/:id", ordersController.updateOrders)
   .delete("/:id", ordersController.deleteOrders);
 
 module.exports = router;

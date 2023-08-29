@@ -1,16 +1,19 @@
 const {
   selectAllProduct,
   selectProduct,
+  selectProducSeller,
   insertProduct,
   updateProduct,
   deleteProduct,
   countData,
   findId,
+  findSellerId,
   searching,
 } = require("../model/products");
 const commonHelper = require("../helper/common");
-// const client = require("../config/redis");
+const { v4: uuidv4 } = require("uuid");
 const cloudinary = require("../middleware/cloudinary");
+// const client = require("../config/redis");
 
 const productController = {
   getAllProduct: async (req, res) => {
@@ -18,7 +21,7 @@ const productController = {
       const page = Number(req.query.page) || 1;
       const limit = Number(req.query.limit) || 10;
       const offset = (page - 1) * limit;
-      const sortby = req.query.sortby || "id";
+      const sortby = req.query.sortby || "product_created";
       const sort = req.query.sort || "ASC";
       const result = await selectAllProduct(limit, offset, sortby, sort);
       const {
@@ -43,15 +46,15 @@ const productController = {
       console.log(error);
     }
   },
+
   getDetailProduct: async (req, res) => {
-    const id = Number(req.params.id);
-    const { rowCount } = await findId(id);
+    const product_id = String(req.params.id);
+    const { rowCount } = await findId(product_id);
     if (!rowCount) {
       return res.json({ message: "ID Not Found" });
     }
-    selectProduct(id)
+    selectProduct(product_id)
       .then((result) => {
-        // client.setEx(`products/${id}`, 60 * 60, JSON.stringify(result.rows));
         commonHelper.response(
           res,
           result.rows,
@@ -61,24 +64,39 @@ const productController = {
       })
       .catch((err) => res.send(err));
   },
+
+  getSellerProduct: async (req, res) => {
+    const seller_id = String(req.params.id);
+    const { rowCount } = await findSellerId(seller_id);
+    if (!rowCount) {
+      return res.json({ message: "ID Not Found" });
+    }
+    selectProducSeller(seller_id)
+      .then((result) => {
+        commonHelper.response(
+          res,
+          result.rows,
+          200,
+          "get data success from database"
+        );
+      })
+      .catch((err) => res.send(err));
+  },
+
   createProduct: async (req, res) => {
-    const PORT = process.env.PORT || 2525;
-    const DB_HOST = process.env.PGHOST || "localhost";
     const result = await cloudinary.uploader.upload(req.file.path);
-    const photo = result.secure_url;
-    const { name, price, stock, description, id_category } = req.body;
-    const {
-      rows: [count],
-    } = await countData();
-    const id = Number(count.count) + 1;
+    const product_photo = result.secure_url;
+    const { product_name, product_price, product_stock, product_description, category_id, seller_id } = req.body;
+    const product_id = uuidv4();
     const data = {
-      id,
-      name,
-      price,
-      stock,
-      photo,
-      description,
-      id_category,
+      product_id,
+      product_name,
+      product_price,
+      product_stock,
+      product_photo,
+      product_description,
+      category_id,
+      seller_id,
     };
     insertProduct(data)
       .then((result) =>
@@ -86,26 +104,25 @@ const productController = {
       )
       .catch((err) => res.send(err));
   },
+
   updateProduct: async (req, res) => {
     try {
-      const PORT = process.env.PORT || 2525;
-      const DB_HOST = process.env.PGHOST || "localhost";
-      const id = Number(req.params.id);
+      const product_id = String(req.params.id);
       const result = await cloudinary.uploader.upload(req.file.path);
-      const photo = result.secure_url;
-      const { name, price, stock, description, id_category } = req.body;
-      const { rowCount } = await findId(id);
+      const product_photo = result.secure_url;
+      const { product_name, product_price, product_stock, product_description, category_id } = req.body;
+      const { rowCount } = await findId(product_id);
       if (!rowCount) {
         res.json({ message: "ID is Not Found" });
       }
       const data = {
-        id,
-        name,
-        price,
-        stock,
-        photo,
-        description,
-        id_category,
+        product_id,
+        product_name,
+        product_price,
+        product_stock,
+        product_photo,
+        product_description,
+        category_id,
       };
       updateProduct(data)
         .then((result) =>
@@ -116,14 +133,15 @@ const productController = {
       console.log(error);
     }
   },
+
   deleteProduct: async (req, res) => {
     try {
-      const id = Number(req.params.id);
-      const { rowCount } = await findId(id);
+      const product_id = String(req.params.id);
+      const { rowCount } = await findId(product_id);
       if (!rowCount) {
         res.json({ message: "ID is Not Found" });
       }
-      deleteProduct(id)
+      deleteProduct(product_id)
         .then((result) =>
           commonHelper.response(res, result.rows, 200, "Product deleted")
         )
@@ -132,6 +150,7 @@ const productController = {
       console.log(error);
     }
   },
+  
   searching: async (req, res) => {
     const search = req.query.keyword;
     searching(search)

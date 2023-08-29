@@ -4,10 +4,7 @@ const categoryController = require("../controller/category");
 
 router
   .get("/", categoryController.getAllCategory)
-  .get("/search", categoryController.searching)
-  .get("/:id", categoryController.getDetailCategory)
   .post("/", categoryController.createCategory)
-  .put("/:id", categoryController.updateCategory)
   .delete("/:id", categoryController.deleteCategory);
 
 module.exports = router;
