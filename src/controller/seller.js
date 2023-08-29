@@ -1,4 +1,10 @@
-const { createSeller, findEmail, selectsSeller } = require("../model/seller");
+const {
+  createSeller,
+  findEmail,
+  selectsSeller,
+  updateSeller,
+  findId,
+} = require("../model/seller");
 const bcrypt = require("bcryptjs");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
@@ -113,6 +119,40 @@ const sellerController = {
         );
       })
       .catch((err) => res.send(err));
+  },
+
+  updateSeller: async (req, res) => {
+    try {
+      const seller_id = String(req.params.id);
+      // const result = await cloudinary.uploader.upload(req.file.path);
+      // const photo = result.secure_url;
+      const {
+        seller_email,
+        seller_fullname,
+        seller_phone,
+        store_name,
+        store_description,
+      } = req.body;
+      const { rowCount } = await findId(seller_id);
+      if (!rowCount) {
+        res.json({ message: "ID is Not Found" });
+      }
+      const data = {
+        seller_id,
+        seller_email,
+        seller_fullname,
+        seller_phone,
+        store_name,
+        store_description,
+      };
+      updateSeller(data)
+        .then((result) =>
+          commonHelper.response(res, result.rows, 200, "Account updated")
+        )
+        .catch((err) => res.send(err));
+    } catch (error) {
+      console.log(error);
+    }
   },
 };
 
