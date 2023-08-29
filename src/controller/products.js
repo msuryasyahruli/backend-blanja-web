@@ -67,10 +67,10 @@ const productController = {
 
   getSellerProduct: async (req, res) => {
     const seller_id = String(req.params.id);
-    const { rowCount } = await findSellerId(seller_id);
-    if (!rowCount) {
-      return res.json({ message: "ID Not Found" });
-    }
+    // const { rowCount } = await findSellerId(seller_id);
+    // if (!rowCount) {
+    //   return res.json({ message: "ID Not Found" });
+    // }
     selectProducSeller(seller_id)
       .then((result) => {
         commonHelper.response(
