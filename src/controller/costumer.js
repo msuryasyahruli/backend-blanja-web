@@ -1,6 +1,7 @@
 const {
   createCustomer,
   updateCustomer,
+  selectsCustomer,
   findEmail,
   findId,
 } = require("../model/customer");
@@ -89,6 +90,20 @@ const customerController = {
       refreshToken: authHelper.refreshToken(payload),
     };
     commonHelper.response(res, result, 200, "Token has refreshed");
+  },
+
+  getDetailsCustomer: async (req, res) => {
+    const customer_id = String(req.params.id);
+    selectsCustomer(customer_id)
+      .then((result) => {
+        commonHelper.response(
+          res,
+          result.rows,
+          200,
+          "get data success from database"
+        );
+      })
+      .catch((err) => res.send(err));
   },
 
   updateCustomer: async (req, res) => {

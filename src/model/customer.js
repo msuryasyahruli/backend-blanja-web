@@ -15,6 +15,10 @@ const createCustomer = (data) => {
   );
 };
 
+const selectsCustomer = (customer_id) => {
+  return Pool.query(`SELECT * FROM customer WHERE customer_id='${customer_id}'`);
+};
+
 const updateCustomer = (data) => {
   const {
     customer_id,
@@ -61,6 +65,7 @@ const findId = (customer_id) => {
 module.exports = {
   createCustomer,
   updateCustomer,
+  selectsCustomer,
   findEmail,
   findId,
 };
