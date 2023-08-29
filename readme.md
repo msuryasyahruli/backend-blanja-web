@@ -50,10 +50,10 @@ These are the libraries and service used for building this backend API
 git clone https://github.com/msuryasyahruli/backend-blanja-web
 ```
 
-2. Change directory to blanja-be
+2. Change directory to blanja-web
 
 ```sh
-cd Blanja-BE
+cd backend-blanja-web
 ```
 
 3. Install all of the required modules
@@ -108,4 +108,4 @@ API endpoint list are also available as published postman documentation
 
 :rocket: [`Demo Blanja`](https://vercel.com/izaazwaskito/blanja-fe)
 
-Project link : [https://github.com/msuryasyahruli/backend-blanja-web](https://github.com/msuryasyahruli/backend-blanja-web))
+Project link : [https://github.com/msuryasyahruli/backend-blanja-web](https://github.com/msuryasyahruli/backend-blanja-web)
