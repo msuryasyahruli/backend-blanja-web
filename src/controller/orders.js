@@ -49,12 +49,12 @@ const ordersController = {
 
   deleteOrders: async (req, res) => {
     try {
-      const order_id = String(req.params.id);
-      const { rowCount } = await findId(order_id);
-      if (!rowCount) {
-        res.json({ message: "ID is Not Found" });
-      }
-      deleteOrders(order_id)
+      const customer_id = String(req.params.id);
+      // const { rowCount } = await findId(customer_id);
+      // if (!rowCount) {
+      //   res.json({ message: "ID is Not Found" });
+      // }
+      deleteOrders(customer_id)
         .then((result) =>
           commonHelper.response(res, result.rows, 200, "Orders deleted")
         )

@@ -19,8 +19,8 @@ const insertOrders = (data) => {
   );
 };
 
-const deleteOrders = (order_id) => {
-  return Pool.query(`DELETE FROM orders WHERE order_id='${order_id}'`);
+const deleteOrders = (customer_id) => {
+  return Pool.query(`DELETE FROM orders WHERE customer_id='${customer_id}'`);
 };
 
 const findId = (order_id) => {

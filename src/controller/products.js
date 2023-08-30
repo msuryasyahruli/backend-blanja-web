@@ -22,7 +22,7 @@ const productController = {
       const limit = Number(req.query.limit) || 10;
       const offset = (page - 1) * limit;
       const sortby = req.query.sortby || "product_created";
-      const sort = req.query.sort || "ASC";
+      const sort = req.query.sort || "DESC";
       const result = await selectAllProduct(limit, offset, sortby, sort);
       const {
         rows: [count],
