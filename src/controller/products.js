@@ -36,7 +36,7 @@ const productController = {
         totalPage: totalPage,
       };
       commonHelper.response(
-        res,
+        res, 
         result.rows,
         200,
         "get data success",
