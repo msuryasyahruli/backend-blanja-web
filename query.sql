@@ -48,3 +48,12 @@ CREATE TABLE orders(
     product_id VARCHAR,
     FOREIGN KEY (product_id) REFERENCES products(product_id)
 );
+
+CREATE TABLE address(
+    address_id VARCHAR PRIMARY KEY,
+    address_name VARCHAR,
+    posttal_code VARCHAR,
+    city VARCHAR,
+    save_address_as VARCHAR,
+    customer_id VARCHAR
+);

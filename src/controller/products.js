@@ -19,9 +19,9 @@ const productController = {
   getAllProduct: async (req, res) => {
     try {
       const page = Number(req.query.page) || 1;
-      const limit = Number(req.query.limit) || 10;
+      const limit = Number(req.query.limit) || 1000;
       const offset = (page - 1) * limit;
-      const sortby = req.query.sortby || "product_created";
+      const sortby = req.query.sortby || "product_id";
       const sort = req.query.sort || "DESC";
       const result = await selectAllProduct(limit, offset, sortby, sort);
       const {
@@ -67,10 +67,6 @@ const productController = {
 
   getSellerProduct: async (req, res) => {
     const seller_id = String(req.params.id);
-    // const { rowCount } = await findSellerId(seller_id);
-    // if (!rowCount) {
-    //   return res.json({ message: "ID Not Found" });
-    // }
     selectProducSeller(seller_id)
       .then((result) => {
         commonHelper.response(

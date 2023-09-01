@@ -10,6 +10,7 @@ const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
 const authHelper = require("../helper/auth");
 const commonHelper = require("../helper/common");
+const cloudinary = require("../middleware/cloudinary");
 
 const customerController = {
   registerCustomer: async (req, res) => {
@@ -109,14 +110,9 @@ const customerController = {
   updateCustomer: async (req, res) => {
     try {
       const customer_id = String(req.params.id);
-      // const result = await cloudinary.uploader.upload(req.file.path);
-      // const photo = result.secure_url;
-      const {
-        customer_email,
-        customer_fullname,
-        customer_address,
-        customer_phone,
-      } = req.body;
+      const result = await cloudinary.uploader.upload(req.file.path);
+      const customer_photo = result.secure_url;
+      const { customer_email, customer_fullname, customer_phone } = req.body;
       const { rowCount } = await findId(customer_id);
       if (!rowCount) {
         res.json({ message: "ID is Not Found" });
@@ -125,7 +121,7 @@ const customerController = {
         customer_id,
         customer_email,
         customer_fullname,
-        customer_address,
+        customer_photo,
         customer_phone,
       };
       updateCustomer(data)

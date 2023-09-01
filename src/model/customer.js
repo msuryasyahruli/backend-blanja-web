@@ -7,11 +7,11 @@ const createCustomer = (data) => {
     customer_passwordHash,
     customer_fullname,
     role,
-    customer_address,
+    customer_photo,
     customer_phone,
   } = data;
   return Pool.query(
-    `INSERT INTO customer(customer_id,customer_email,customer_password,customer_fullname,role,customer_address,customer_phone ) VALUES('${customer_id}','${customer_email}','${customer_passwordHash}','${customer_fullname}','${role}','${customer_address}','${customer_phone}')`
+    `INSERT INTO customer(customer_id,customer_email,customer_password,customer_fullname,role,customer_photo,customer_phone ) VALUES('${customer_id}','${customer_email}','${customer_passwordHash}','${customer_fullname}','${role}','${customer_photo}','${customer_phone}')`
   );
 };
 
@@ -24,11 +24,11 @@ const updateCustomer = (data) => {
     customer_id,
     customer_email,
     customer_fullname,
-    customer_address,
+    customer_photo,
     customer_phone,
   } = data;
   return Pool.query(
-    `UPDATE customer SET customer_email='${customer_email}', customer_fullname='${customer_fullname}', customer_address='${customer_address}', customer_phone='${customer_phone}' WHERE customer_id='${customer_id}'`
+    `UPDATE customer SET customer_email='${customer_email}', customer_fullname='${customer_fullname}', customer_photo='${customer_photo}', customer_phone='${customer_phone}' WHERE customer_id='${customer_id}'`
   );
 };
 
