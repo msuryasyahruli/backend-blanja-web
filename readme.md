@@ -7,7 +7,7 @@
   <p align="center">
     <a href="https://github.com/msuryasyahruli/backend-blanja-web"><strong>Explore the docs »</strong></a>
     <br />
-    <a href="">View Demo</a>
+    <a href="https://blanja-market-web.vercel.app/">View Demo</a>
     ·
     <a href="https://tasty-gray-horse.cyclic.app/">Api Demo</a>
   </p>
@@ -106,6 +106,6 @@ API endpoint list are also available as published postman documentation
 
 :rocket: [`Frontend Blanja`](https://github.com/msuryasyahruli/blanja-web)
 
-:rocket: [`Demo Blanja`]()
+:rocket: [`Demo Blanja`](https://blanja-market-web.vercel.app/)
 
 Project link : [https://github.com/msuryasyahruli/backend-blanja-web](https://github.com/msuryasyahruli/backend-blanja-web)
