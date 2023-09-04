@@ -1,6 +1,7 @@
 const {
   createCustomer,
   updateCustomer,
+  updateCustomerPhoto,
   selectsCustomer,
   findEmail,
   findId,
@@ -110,8 +111,6 @@ const customerController = {
   updateCustomer: async (req, res) => {
     try {
       const customer_id = String(req.params.id);
-      const result = await cloudinary.uploader.upload(req.file.path);
-      const customer_photo = result.secure_url;
       const { customer_email, customer_fullname, customer_phone } = req.body;
       const { rowCount } = await findId(customer_id);
       if (!rowCount) {
@@ -121,12 +120,34 @@ const customerController = {
         customer_id,
         customer_email,
         customer_fullname,
-        customer_photo,
         customer_phone,
       };
       updateCustomer(data)
         .then((result) =>
           commonHelper.response(res, result.rows, 200, "Account updated")
+        )
+        .catch((err) => res.send(err));
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  
+  updateCustomerPhoto: async (req, res) => {
+    try {
+      const customer_id = String(req.params.id);
+      const result = await cloudinary.uploader.upload(req.file.path);
+      const customer_photo = result.secure_url;
+      const { rowCount } = await findId(customer_id);
+      if (!rowCount) {
+        res.json({ message: "ID is Not Found" });
+      }
+      const data = {
+        customer_id,
+        customer_photo,
+      };
+      updateCustomerPhoto(data)
+        .then((result) =>
+          commonHelper.response(res, result.rows, 200, "Photo updated")
         )
         .catch((err) => res.send(err));
     } catch (error) {
