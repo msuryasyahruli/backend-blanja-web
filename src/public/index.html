@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="Your Name" />
+    <title>Blanja API Server</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        background-color: #121212;
+        color: #e0e0e0;
+      }
+
+      header {
+        background: #1e1e1e;
+        padding: 1px;
+        text-align: center;
+      }
+
+      header,
+      a {
+        margin: 0 10px;
+        color: #bb86fc;
+        text-decoration: none;
+      }
+
+      main,
+      footer {
+        padding: 0 20px;
+        max-width: 768px;
+        margin-inline: auto;
+      }
+
+      h2,
+      h3,
+      h4 {
+        color: #ffffff;
+      }
+
+      ul li {
+        font-size: 14px;
+      }
+
+      hr {
+        border: 1px solid #333;
+      }
+
+      footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      @media (max-width: 768px) {
+        footer {
+          flex-direction: column;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Header Section -->
+    <header>
+      <h2>Blanja API Server</h2>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <!-- Welcome Section -->
+      <section>
+        <h3>Congratulations!</h3>
+        <p>✨ You're successfully running the API Server ✨</p>
+      </section>
+
+      <!-- Resources Section -->
+      <section>
+        <h3>Resources</h3>
+        <ul>
+          <li><a href="/users/profile" alt="Users API">/users</a></li>
+          <li><a href="/products" alt="Products API">/products</a></li>
+          <li><a href="/categories" alt="Categories API">/categories</a></li>
+          <li><a href="/address/:id" alt="Address API">/address/:id</a></li>
+          <li><a href="/carts/:id" alt="Carts API">/carts/:id</a></li>
+          <li><a href="/orders/:id" alt="Orders API">/orders/:id</a></li>
+        </ul>
+      </section>
+
+      <!-- Custom Routes Section -->
+      <section>
+        <h3>Custom Routes :</h3>
+
+        <!-- Users Router -->
+        <article>
+          <h4>Users Router</h4>
+          <ul>
+            <li>GET - <code>/profile</code></li>
+            <li>POST - <code>/register</code></li>
+            <li>POST - <code>/login</code></li>
+            <li>POST - <code>/refresh-token</code></li>
+            <li>PATCH - <code>/:id</code></li>
+            <li>PATCH - <code>/:id/store</code></li>
+            <li>DELETE - <code>/:id/picture</code></li>
+          </ul>
+        </article>
+
+        <!-- Products Router -->
+        <article>
+          <h4>Products Router</h4>
+          <ul>
+            <li>GET - <code>/products</code></li>
+            <li>GET - <code>/products/search</code></li>
+            <li>GET - <code>/products/:id</code></li>
+            <li>GET - <code>/products/seller/:id</code></li>
+            <li>POST - <code>/products</code></li>
+            <li>PATCH - <code>/products/:id</code></li>
+            <li>DELETE - <code>/products/:id</code></li>
+          </ul>
+        </article>
+
+        <!-- Categories Router -->
+        <article>
+          <h4>Categories Router</h4>
+          <ul>
+            <li>GET - <code>/categories</code></li>
+            <li>GET - <code>/categories/search</code></li>
+            <li>POST - <code>/categories</code></li>
+            <li>DELETE - <code>/categories/:id</code></li>
+          </ul>
+        </article>
+
+        <!-- Address Router -->
+        <article>
+          <h4>Address Router</h4>
+          <ul>
+            <li>GET - <code>/address/:id</code></li>
+            <li>POST - <code>/address</code></li>
+            <li>PATCH - <code>/address/:id</code></li>
+            <li>DELETE - <code>/address/:id</code></li>
+          </ul>
+        </article>
+
+        <!-- Carts Router -->
+        <article>
+          <h4>Carts Router</h4>
+          <ul>
+            <li>GET - <code>/carts/:id</code></li>
+            <li>POST - <code>/carts</code></li>
+            <li>PUT - <code>/carts/:id</code></li>
+            <li>DELETE - <code>/carts/:id</code></li>
+          </ul>
+        </article>
+
+        <!-- Orders Router -->
+        <article>
+          <h4>Orders Router</h4>
+          <ul>
+            <li>GET - <code>/orders/:id</code></li>
+            <li>POST - <code>/orders</code></li>
+            <li>PATCH - <code>/orders/:id</code></li>
+            <li>DELETE - <code>/orders/:id</code></li>
+          </ul>
+        </article>
+      </section>
+    </main>
+
+    <hr />
+
+    <footer>
+      <p>&copy; <span id="year"></span> Copyright. All rights reserved.</p>
+      <h4>
+        Documentation:
+        <a href="https://github.com/msuryasyahruli/backend-blanja-web"
+          >Github</a
+        >
+      </h4>
+    </footer>
+  </body>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</html>

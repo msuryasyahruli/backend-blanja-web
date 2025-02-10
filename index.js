@@ -7,7 +7,7 @@ const helmet = require("helmet");
 const createError = require('http-errors');
 const xss = require("xss-clean");
 const mainRouter = require("./src/routes/index");
-const port = 2525;
+const port = process.env.PORT;
 
 app.use(express.json());
 // app.use(morgan("dev"));
@@ -20,7 +20,7 @@ app.all("*", (req, res, next) => {
   next(new createError.NotFound());
 });
 app.use((err, req, res, next) => {
-  const messageError = err.message || "internal server error";
+  const messageError = err.message || "Internal server error";
   const statusCode = err.status || 500;
   res.status(statusCode).json({
     message: messageError,

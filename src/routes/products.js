@@ -1,15 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const productController = require("../controller/products");
-const upload = require("../middleware/upload");
+const productsController = require("../controller/products");
+const { productThumbnail } = require("../middleware/upload");
 
 router
-  .get("/", productController.getAllProduct)
-  .get("/search", productController.searching)
-  .get("/:id", productController.getDetailProduct)
-  .get("/seller/:id", productController.getSellerProduct)
-  .post("/", upload, productController.createProduct)
-  .put("/:id", upload, productController.updateProduct)
-  .delete("/:id", productController.deleteProduct);
+  .get("/", productsController.getAllProducts)
+  .get("/search", productsController.searching)
+  .get("/:id", productsController.getDetailProduct)
+  .get("/seller/:id", productsController.getSellerProducts)
+  .post("/", productThumbnail, productsController.createProduct)
+  .patch("/:id", productThumbnail, productsController.updateProduct)
+  .delete("/:id", productsController.deleteProduct);
 
 module.exports = router;

@@ -1,38 +1,41 @@
 const {
-  selectAllCategory,
-  insertCategory,
-  deleteCategory,
+  selectAllCategories,
+  insertCategories,
+  deleteCategories,
   findId,
   searching,
-  findName,
-} = require("../model/category");
+  findCategory,
+} = require("../model/categories");
 const commonHelper = require("../helper/common");
 const { v4: uuidv4 } = require("uuid");
 
-const categoryController = {
+const categoriesController = {
   getAllCategory: async (req, res) => {
     try {
-      const sortby = req.query.sortby || "category_id";
+      const sortby = req.query.sortby || "category_name";
       const sort = req.query.sort || "ASC";
-      const result = await selectAllCategory(sortby, sort);
-      commonHelper.response(res, result.rows, 200, "get data success");
+
+      const result = await selectAllCategories(sortby, sort);
+      commonHelper.response(res, result.rows, 200, "Get data success");
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   },
 
   createCategory: async (req, res) => {
     const { category_name } = req.body;
-    const { rowCount } = await findName(category_name);
+    const { rowCount } = await findCategory(category_name);
     if (rowCount) {
       return res.json({ messege: "Category is already taken" });
     }
+
     const category_id = uuidv4();
     const data = {
       category_id,
       category_name,
     };
-    insertCategory(data)
+
+    insertCategories(data)
       .then((result) =>
         commonHelper.response(res, result.rows, 201, "Category created")
       )
@@ -46,7 +49,8 @@ const categoryController = {
       if (!rowCount) {
         res.json({ message: "ID is Not Found" });
       }
-      deleteCategory(category_id)
+
+      deleteCategories(category_id)
         .then((result) =>
           commonHelper.response(res, result.rows, 200, "Category deleted")
         )
@@ -60,10 +64,10 @@ const categoryController = {
     const search = req.query.keyword;
     searching(search)
       .then((result) => {
-        commonHelper.response(res, result.rows, 200, "search success");
+        commonHelper.response(res, result.rows, 200, "Search success");
       })
       .catch((err) => res.send(err));
   },
 };
 
-module.exports = categoryController;
+module.exports = categoriesController;

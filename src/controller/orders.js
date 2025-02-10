@@ -1,69 +1,146 @@
 const {
-  selectAllOrders,
   selectOrders,
-  insertOrders,
-  deleteOrders,
+  selectOrderItems,
+  insertOrder,
+  insertItem,
+  updateOrder,
+  deleteOrder,
   findId,
 } = require("../model/orders");
+const { findId: userId } = require("../model/users");
 const commonHelper = require("../helper/common");
 const { v4: uuidv4 } = require("uuid");
 
 const ordersController = {
-  getAllOrders: async (req, res) => {
+  getOrders: async (req, res) => {
     try {
-      const sortby = req.query.sortby || "order_id";
-      const sort = req.query.sort || "ASC";
-      const result = await selectAllOrders(sortby, sort);
-      commonHelper.response(res, result.rows, 200, "get data success");
+      const user_id = String(req.params.id);
+      const { rowCount } = await userId(user_id);
+      if (!rowCount) {
+        return res.json({ message: "ID user is Not Found" });
+      }
+
+      const orders = await selectOrders(user_id);
+
+      const result = await Promise.all(
+        orders.rows.map(async (data) => {
+          const items = await selectOrderItems(data.order_id);
+          const orderItems = items.rows.map((item) => ({
+            order_item_id: item.order_item_id,
+            product_id: item.product_id,
+            product_name: item.product_name,
+            product_thumbnail: item.product_thumbnail,
+            picked_variant: item.picked_variant,
+            product_price: item.product_price,
+            quantity: item.quantity,
+          }));
+
+          const calculatedTotalPrice = orderItems.reduce(
+            (acc, item) => acc + item.product_price,
+            0
+          );
+
+          return {
+            order_id: data.order_id,
+            products: orderItems,
+            total_price: calculatedTotalPrice,
+            order_status: data.order_status,
+            payment_method: data.payment_method,
+            delivery_status: data.delivery_status,
+            created_at: data.created_at,
+          };
+        })
+      );
+
+      commonHelper.response(res, result, 200, "Get data success");
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   },
 
-  getDetailOrders: async (req, res) => {
-    const customer_id = String(req.params.id);
-    selectOrders(customer_id)
-      .then((result) => {
-        commonHelper.response(res, result.rows, 200, "get data success");
-      })
-      .catch((err) => res.send(err));
+  createOrders: async (req, res) => {
+    try {
+      const {
+        order_status,
+        total_price,
+        payment_method,
+        delivery_status,
+        products,
+        user_id,
+      } = req.body;
+
+      const order_id = uuidv4();
+      const data = {
+        order_id,
+        order_status,
+        total_price,
+        payment_method,
+        delivery_status,
+        user_id,
+      };
+
+      const orderItems = await products.map(
+        ({ cart_id, product_id, quantity, product_price, picked_variant }) => {
+          const data = {
+            order_item_id: cart_id,
+            order_id,
+            product_id,
+            quantity,
+            product_price: product_price * quantity,
+            picked_variant,
+          };
+
+          insertItem(data);
+        }
+      );
+
+      const result = await insertOrder(data);
+      await Promise.all(orderItems);
+
+      commonHelper.response(res, result.rows, 201, "Orders created");
+    } catch (error) {
+      console.error(error);
+    }
   },
 
-  createOrders: async (req, res) => {
-    const {
-      product_id,
-      customer_id,
-    } = req.body;
-    const order_id = uuidv4();
-    const data = {
-      order_id,
-      product_id,
-      customer_id,
-    };
-    insertOrders(data)
-      .then((result) =>
-        commonHelper.response(res, result.rows, 201, "Orders created")
-      )
-      .catch((err) => res.send(err));
+  updateOrder: async (req, res) => {
+    try {
+      const order_id = String(req.params.id);
+      const { order_status, delivery_status } = req.body;
+
+      const { rowCount } = await findId(order_id);
+      if (!rowCount) {
+        return res.json({ message: "ID is Not Found" });
+      }
+
+      const data = {
+        order_id,
+        order_status,
+        delivery_status,
+      };
+
+      const result = await updateOrder(data);
+      commonHelper.response(res, result.rows, 200);
+    } catch (error) {
+      console.error(error);
+    }
   },
 
   deleteOrders: async (req, res) => {
     try {
-      const customer_id = String(req.params.id);
-      // const { rowCount } = await findId(customer_id);
-      // if (!rowCount) {
-      //   res.json({ message: "ID is Not Found" });
-      // }
-      deleteOrders(customer_id)
-        .then((result) =>
-          commonHelper.response(res, result.rows, 200, "Orders deleted")
-        )
-        .catch((err) => res.send(err));
+      const order_id = String(req.params.id);
+      const { rowCount } = await findId(order_id);
+      if (!rowCount) {
+        return res.json({ message: "ID is Not Found" });
+      }
+
+      deleteOrder(order_id).then((result) =>
+        commonHelper.response(res, result.rows, 200, "Orders deleted")
+      );
     } catch (error) {
       console.log(error);
     }
   },
-
 };
 
 module.exports = ordersController;

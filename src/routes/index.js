@@ -1,17 +1,21 @@
 const express = require("express");
 const router = express.Router();
 const productRouter = require("./products");
-const categoryRouter = require("./category");
+const categoriesRouter = require("./categories");
 const ordersRouter = require("./orders");
-const customerRouter = require("./customer");
-const sellerRouter = require("./seller");
-const addressrouter = require("./address");
+const usersRouter = require("./users");
+const addressRouter = require("./address");
+const cartsRouter = require("./carts");
+const path = require("path");
 
+router.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../public", "index.html"));
+});
 router.use("/products", productRouter);
-router.use("/category", categoryRouter);
+router.use("/categories", categoriesRouter);
 router.use("/orders", ordersRouter);
-router.use("/customer", customerRouter);
-router.use("/seller", sellerRouter);
-router.use("/address", addressrouter)
+router.use("/users", usersRouter);
+router.use("/address", addressRouter);
+router.use("/carts", cartsRouter);
 
 module.exports = router;

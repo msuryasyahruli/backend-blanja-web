@@ -5,7 +5,7 @@ const addressController = require("../controller/address");
 router
   .get("/:id", addressController.getAddress)
   .post("/", addressController.createAddress)
-  .put("/:id", addressController.updateAddress)
+  .patch("/:id", addressController.updateAddress)
   .delete("/:id", addressController.deleteAddress)
 
 module.exports = router;

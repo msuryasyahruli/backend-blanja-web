@@ -1,26 +1,91 @@
 const Pool = require("../config/db");
 
-const selectAllOrders = (sortby, sort) => {
-  return Pool.query(`SELECT * FROM orders ORDER BY ${sortby} ${sort}`);
+const selectOrders = (user_id) => {
+  return Pool.query(`SELECT orders.order_id,
+      orders.total_price,
+      orders.order_status,
+      orders.payment_method,
+      orders.delivery_status,
+      orders.created_at
+    FROM orders
+    WHERE orders.user_id ='${user_id}'`);
 };
 
-const selectOrders = (customer_id) => {
-  return Pool.query(`SELECT orders.*,products.* FROM orders JOIN products ON orders.product_id = products.product_id WHERE orders.customer_id ='${customer_id}'`);
+const selectOrderItems = (order_id) => {
+  return Pool.query(`SELECT order_items.*,
+      products.product_id,
+      products.product_name,
+      products.product_stock,
+      products.product_thumbnail,
+      order_items.picked_variant
+    FROM order_items
+    LEFT JOIN products ON order_items.product_id = products.product_id
+    WHERE order_items.order_id ='${order_id}'`);
 };
 
-const insertOrders = (data) => {
+const insertOrder = (data) => {
   const {
     order_id,
-    product_id,
-    customer_id,
+    order_status,
+    total_price,
+    payment_method,
+    delivery_status,
+    user_id,
   } = data;
+
   return Pool.query(
-    `INSERT INTO orders(order_id, product_id, customer_id ) VALUES('${order_id}','${product_id}','${customer_id}')`
+    `INSERT INTO orders(order_id, order_status, total_price, payment_method, delivery_status, user_id )
+     VALUES($1, $2, $3, $4, $5, $6)`,
+    [
+      order_id,
+      order_status,
+      total_price,
+      payment_method,
+      delivery_status,
+      user_id,
+    ]
   );
 };
 
-const deleteOrders = (customer_id) => {
-  return Pool.query(`DELETE FROM orders WHERE customer_id='${customer_id}'`);
+const insertItem = (data) => {
+  const {
+    order_item_id,
+    order_id,
+    product_id,
+    quantity,
+    product_price,
+    picked_variant,
+  } = data;
+
+  return Pool.query(
+    `INSERT INTO order_items (order_item_id, order_id, product_id, quantity, product_price, picked_variant) 
+     VALUES ($1, $2, $3, $4, $5, $6)`,
+    [
+      order_item_id,
+      order_id,
+      product_id,
+      quantity,
+      product_price,
+      picked_variant,
+    ]
+  );
+};
+
+const updateOrder = (data) => {
+  const { order_id, order_status, delivery_status } = data;
+  return Pool.query(
+    `UPDATE orders
+    SET 
+      order_status = COALESCE($1, order_status), 
+      delivery_status = COALESCE($2, delivery_status)
+    WHERE order_id = $3
+    RETURNING *`,
+    [order_status, delivery_status, order_id]
+  );
+};
+
+const deleteOrder = (order_id) => {
+  return Pool.query(`DELETE FROM orders WHERE order_id='${order_id}'`);
 };
 
 const findId = (order_id) => {
@@ -39,9 +104,11 @@ const findId = (order_id) => {
 };
 
 module.exports = {
-  selectAllOrders,
   selectOrders,
-  insertOrders,
-  deleteOrders,
+  selectOrderItems,
+  insertOrder,
+  insertItem,
+  updateOrder,
+  deleteOrder,
   findId,
 };
