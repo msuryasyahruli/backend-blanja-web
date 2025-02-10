@@ -8,6 +8,7 @@ const {
   findId,
 } = require("../model/orders");
 const { findId: userId } = require("../model/users");
+const { deleteByUser } = require("../model/carts");
 const commonHelper = require("../helper/common");
 const { v4: uuidv4 } = require("uuid");
 
@@ -79,7 +80,7 @@ const ordersController = {
         user_id,
       };
 
-      const orderItems = await products.map(
+      const orderItems = products.map(
         ({ cart_id, product_id, quantity, product_price, picked_variant }) => {
           const data = {
             order_item_id: cart_id,
@@ -96,6 +97,8 @@ const ordersController = {
 
       const result = await insertOrder(data);
       await Promise.all(orderItems);
+
+      await deleteByUser(user_id);
 
       commonHelper.response(res, result.rows, 201, "Orders created");
     } catch (error) {

@@ -75,8 +75,7 @@ const updateOrder = (data) => {
   const { order_id, order_status, delivery_status } = data;
   return Pool.query(
     `UPDATE orders
-    SET 
-      order_status = COALESCE($1, order_status), 
+    SET order_status = COALESCE($1, order_status), 
       delivery_status = COALESCE($2, delivery_status)
     WHERE order_id = $3
     RETURNING *`,

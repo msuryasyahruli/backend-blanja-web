@@ -39,6 +39,10 @@ const deleteCarts = (cart_id) => {
   return Pool.query(`DELETE FROM carts WHERE cart_id='${cart_id}'`);
 };
 
+const deleteByUser = (user_id) => {
+  return Pool.query(`DELETE FROM carts WHERE user_id='${user_id}'`);
+};
+
 const findId = (cart_id) => {
   return new Promise((resolve, reject) =>
     Pool.query(
@@ -74,6 +78,7 @@ module.exports = {
   insertCarts,
   updateCart,
   deleteCarts,
+  deleteByUser,
   findId,
   findProduct,
 };
