@@ -28,18 +28,18 @@ const usersController = {
 
       if (role !== "seller" && role !== "customer") {
         return res.json({
-          messege: "The role can only be as a seller or customer only",
+          message: "The role can only be as a seller or customer only",
         });
       }
 
       const { rowCount } = await findEmail(user_email);
       if (rowCount) {
-        return res.json({ messege: "Email is already taken" });
+        return res.json({ message: "Email is already taken" });
       }
 
       if (role === "seller" && (!store_name || !phone_number)) {
         return res.json({
-          messege: "Store name and phone number are required for sellers",
+          message: "Store name and phone number are required for sellers",
         });
       }
 
@@ -74,29 +74,34 @@ const usersController = {
 
   login: async (req, res) => {
     try {
-      const { user_email, user_password } = req.body;
+      const { user_email, user_password, role } = req.body;
       const {
         rows: [user],
       } = await findEmail(user_email);
       if (!user) {
-        return res.json({ messege: "Email is incorrect" });
-      }
-
+        return res.json({ message: "Email is incorrect" });
+      }  
+      
       const validPassword = bcrypt.compareSync(
         user_password,
         user.user_password
       );
+
       if (!validPassword) {
-        return res.json({ messege: "password is incorrect" });
+        return res.json({ message: "Password is incorrect" });
+      } else if (!role) {
+        return res.json({ message: `Role is require`})
+      } else if (role !== user.role) {
+        return res.json({ message: `Email not listed as ${role}`})
       }
 
-      delete user.user_id;
-      delete user.user_password;
       const payload = {
         user_email: user.user_email,
         role: user.role,
       };
 
+      delete user.user_id;
+      delete user.user_password;
       user.token = authHelper.generateToken(payload);
       user.refreshToken = authHelper.refreshToken(payload);
       commonHelper.response(res, user, 201, "Login success");
