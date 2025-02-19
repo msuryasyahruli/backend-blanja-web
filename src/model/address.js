@@ -1,7 +1,7 @@
 const Pool = require("../config/db");
 
 const selectAddress = (user_id) => {
-  return Pool.query(`SELECT * FROM address WHERE user_id='${user_id}'`);
+  return Pool.query(`SELECT * FROM address WHERE user_id='${user_id}' ORDER BY is_default DESC`);
 };
 
 const insertAddress = (data) => {
@@ -56,7 +56,7 @@ const deleteAddress = (address_id) => {
 const findId = (address_id) => {
   return new Promise((resolve, reject) =>
     Pool.query(
-      `SELECT address_id FROM address WHERE address_id='${address_id}'`,
+      `SELECT * FROM address WHERE address_id='${address_id}'`,
       (error, result) => {
         if (!error) {
           resolve(result);

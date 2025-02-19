@@ -36,14 +36,18 @@ const addressController = {
       const { address_name, postal_code, city, address_type, is_default } =
         req.body;
 
-      if (
-        !address_name ||
-        !postal_code ||
-        !city ||
-        !address_type ||
-        is_default === undefined
-      ) {
+      if (!address_name || !postal_code || !city || !address_type) {
         return res.json({ message: "This form cannot be empty" });
+      }
+
+      if (is_default) {
+        const { rows: existingAddresses } = await selectAddress(user_id);
+
+        for (const address of existingAddresses) {
+          if (address.is_default && address.address_id !== address_id) {
+            await updateAddress({ ...address, is_default: false });
+          }
+        }
       }
 
       const address_id = uuidv4();
@@ -67,13 +71,25 @@ const addressController = {
   updateAddress: async (req, res) => {
     try {
       const address_id = String(req.params.id);
-      const { rowCount } = await addressId(address_id);
+      const { rowCount, rows } = await addressId(address_id);
       if (!rowCount) {
         return res.json({ message: "ID is Not Found" });
       }
 
       const { address_name, postal_code, city, address_type, is_default } =
         req.body;
+
+      const user_id = rows[0].user_id;
+
+      if (is_default) {
+        const { rows: existingAddresses } = await selectAddress(user_id);
+
+        for (const address of existingAddresses) {
+          if (address.is_default && address.address_id !== address_id) {
+            await updateAddress({ ...address, is_default: false });
+          }
+        }
+      }
 
       const data = {
         address_id,
