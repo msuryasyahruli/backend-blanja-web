@@ -57,7 +57,7 @@ const addressController = {
         postal_code,
         city,
         address_type,
-        is_default,
+        is_default: is_default || false,
         user_id,
       };
 
