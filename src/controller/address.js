@@ -19,12 +19,7 @@ const addressController = {
       }
 
       const result = await selectAddress(user_id);
-      commonHelper.response(
-        res,
-        result.rows,
-        200,
-        "Get data success"
-      );
+      commonHelper.response(res, result.rows, 200, "Get data success");
     } catch (err) {
       console.error(err);
     }
@@ -38,18 +33,19 @@ const addressController = {
         return res.json({ message: "ID is Not Found" });
       }
 
-      const {
-        address_name,
-        postal_code,
-        city,
-        address_type,
-        is_default,
-      } = req.body;
+      const { address_name, postal_code, city, address_type, is_default } =
+        req.body;
 
-      if (!address_name || !postal_code || !city || !address_type || !is_default) {
-        return res.json({ message: "This form cannot be empty"})
+      if (
+        !address_name ||
+        !postal_code ||
+        !city ||
+        !address_type ||
+        is_default === undefined
+      ) {
+        return res.json({ message: "This form cannot be empty" });
       }
-      
+
       const address_id = uuidv4();
       const data = {
         address_id,
