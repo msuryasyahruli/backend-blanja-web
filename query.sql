@@ -54,6 +54,7 @@ CREATE TABLE carts (
     user_id VARCHAR(50) NOT NULL,
     product_id VARCHAR(50) NOT NULL,
     quantity INTEGER NOT NULL,
+    picked_variant VARCHAR NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products (product_id) ON DELETE CASCADE

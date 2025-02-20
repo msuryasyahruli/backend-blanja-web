@@ -30,7 +30,7 @@ const cartsController = {
 
   createCart: async (req, res) => {
     try {
-      const { product_id, user_id, quantity } = req.body;
+      const { product_id, user_id, quantity, picked_variant } = req.body;
       const {
         rowCount,
         rows: [cart],
@@ -51,6 +51,7 @@ const cartsController = {
           user_id,
           product_id,
           quantity,
+          picked_variant,
         };
 
         result = await insertCarts(data);

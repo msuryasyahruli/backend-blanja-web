@@ -17,9 +17,11 @@ const selectOrderItems = (order_id) => {
       products.product_name,
       products.product_stock,
       products.product_thumbnail,
-      order_items.picked_variant
+      order_items.picked_variant,
+      stores.store_name
     FROM order_items
     LEFT JOIN products ON order_items.product_id = products.product_id
+    LEFT JOIN stores ON products.user_id = stores.user_id
     WHERE order_items.order_id ='${order_id}'`);
 };
 

@@ -34,6 +34,7 @@ const ordersController = {
             picked_variant: item.picked_variant,
             product_price: item.product_price,
             quantity: item.quantity,
+            store_name: item.store_name,
           }));
 
           const calculatedTotalPrice = orderItems.reduce(
@@ -80,6 +81,8 @@ const ordersController = {
         user_id,
       };
 
+      const result = await insertOrder(data);
+
       const orderItems = products.map(
         ({ cart_id, product_id, quantity, product_price, picked_variant }) => {
           const data = {
@@ -87,7 +90,7 @@ const ordersController = {
             order_id,
             product_id,
             quantity,
-            product_price: product_price * quantity,
+            product_price,
             picked_variant,
           };
 
@@ -95,7 +98,6 @@ const ordersController = {
         }
       );
 
-      const result = await insertOrder(data);
       await Promise.all(orderItems);
 
       await deleteByUser(user_id);

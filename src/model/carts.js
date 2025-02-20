@@ -8,22 +8,24 @@ const selectCarts = (user_id, sortby, sort) => {
       products.product_price,
       products.product_stock,
       products.product_thumbnail,
-      products.product_variants,
+      carts.picked_variant,
       carts.quantity,
       categories.category_name,
+      stores.store_name,
       carts.created_at
     FROM carts
     LEFT JOIN products ON carts.product_id = products.product_id
     LEFT JOIN categories ON products.category_id = categories.category_id
+    LEFT JOIN stores ON products.user_id = stores.user_id
     WHERE carts.user_id ='${user_id}'
     ORDER BY ${sortby} ${sort}`);
 };
 
 const insertCarts = (data) => {
-  const { cart_id, product_id, user_id, quantity } = data;
+  const { cart_id, product_id, user_id, quantity, picked_variant } = data;
   return Pool.query(
-    `INSERT INTO carts(cart_id, product_id, user_id, quantity ) 
-    VALUES('${cart_id}','${product_id}','${user_id}','${quantity}')`
+    `INSERT INTO carts(cart_id, product_id, user_id, quantity, picked_variant ) 
+    VALUES('${cart_id}','${product_id}','${user_id}','${quantity}','${picked_variant}')`
   );
 };
 
