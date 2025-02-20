@@ -37,15 +37,10 @@ const ordersController = {
             store_name: item.store_name,
           }));
 
-          const calculatedTotalPrice = orderItems.reduce(
-            (acc, item) => acc + item.product_price,
-            0
-          );
-
           return {
             order_id: data.order_id,
             products: orderItems,
-            total_price: calculatedTotalPrice,
+            total_price: data.total_price,
             order_status: data.order_status,
             payment_method: data.payment_method,
             delivery_status: data.delivery_status,
@@ -90,7 +85,7 @@ const ordersController = {
             order_id,
             product_id,
             quantity,
-            product_price,
+            product_price: product_price * quantity,
             picked_variant,
           };
 
